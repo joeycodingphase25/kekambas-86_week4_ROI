@@ -159,9 +159,9 @@ def main():
                         if answer.lower() == 'p':
                             name.edit('p')
                         if answer.lower() == 'q':
-                            break
-                        else:
-                            print('Invalid input recieved, please review main menu and try again!')   #You will use the def edit() function and this section will be really clean
+                            main()
+                        # else:
+                        #     print('Invalid input recieved, please review main menu and try again!')   #You will use the def edit() function and this section will be really clean
                 else:
                     print("You have entered an invalid password. Try Again")
             break
