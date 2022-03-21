@@ -8,10 +8,8 @@
 class Container: #contains financial plans
     def __init__(self) -> None:
         self.plans = {}   # This will assign  'name': INPUT OBJECT
-    
     def append(self, object):
         self.plans[object.name] = object
-
     def __str__(self): # See all the name-holders for the financial plan
         names = '\n'
         for x in self.plans.keys():
@@ -45,26 +43,24 @@ class Inputs:             # THIS CLASS WILL HOLD ALL THE DATA
             answer = input(f"What is your expected {x} payment> ")
             self.capex[x.title()] = answer
 
-        pass
-
     def edit(self, answer): # This will edit any data
         response = ''
         if answer == 'i':
-            self.display("1")
+            print(self.display("1"))
             while response.title() not in self.income:
                 response = input(f'Which item would you like to adjust? ')
             new_value = input(f'What is the new value for {response.title()}?  ')
             self.income[response.title()] = new_value
             print(f'This is your new data set {self.display("1")}')
         if answer == 'e':
-            self.display("2")
+            print(self.display("2"))
             while response.title() not in self.expenses:
                 response = input(f'Which item would you like to adjust? ')
             new_value = input(f'What is the new value for {response.title()}?  ')
             self.expenses[response.title()] = new_value
             print(f'This is your new data set {self.display("2")}')
         if answer == 'p':
-            self.display("3")
+            print(self.display("3"))
             while response.title() not in self.capex:
                 response = input(f'Which item would you like to adjust? ')
             new_value = input(f'What is the new value for {response.title()}?  ')
@@ -73,26 +69,62 @@ class Inputs:             # THIS CLASS WILL HOLD ALL THE DATA
 
     def display(self, input_dict=None):                                        
         if input_dict == '1':
+            income_total = 0
             income_str = '=============================\n'   # Item to be returned
             for x, y in self.income.items():
                 income_str += f"{x}, ${y}\n--------------------------------------\n"   # Build the return item
+                income_total = int(y) + income_total
+            income_str += f"Your Total Income Expense is : ${income_total}\n"
             income_str += '============================='
             return income_str
         if input_dict == '2':
+            expense_total = 0
             expense_str = ''   # Item to be returned
             for x, y in self.expenses.items():
                 expense_str += f"{x}, ${y}\n--------------------------------------\n"   # Build the return item
+                expense_total = int(y) + expense_total
+            expense_str += f"Your Total Income Expense is : ${expense_total}\n"
+            expense_str += '============================='
             return expense_str
         if input_dict == '3':
+            capex_total = 0
             capex_str = ''   # Item to be returned
             for x, y in self.capex.items():
                 capex_str += f"{x}, ${y}\n--------------------------------------\n"     # Build the return item
+                capex_total = int(y) + capex_total
+            capex_str += f"Your Total Income Expense is : ${expense_total}\n"
+            capex_str += '============================='
             return capex_str
+
         if input_dict == '4':
-            pass  #print all options
-        return "1 argument, but zero were given"  # Built in Error Handling
+    
+            income_total = 0
+            expense_total = 0
+            capex_total = 0
 
+            ROI_str = '=============================\n'   # Item to be returned
+            for x, y in self.income.items():
+                ROI_str += f"{x}, ${y}\n--------------------------------------\n"   # Build the return item
+                income_total += int(y) + income_total
+            ROI_str += f"Your Total Income Expense is : ${income_total}\n"
+            ROI_str += '=============================\n'
+            
+            for x, y in self.expenses.items():
+                ROI_str += f"{x}, ${y}\n--------------------------------------\n"   # Build the return item
+                expense_total += int(y) + expense_total
+            ROI_str += f"Your Total Expense is : ${expense_total}\n"
+            ROI_str += '=============================\n'
+       # Item to be returned
+            for x, y in self.capex.items():
+                ROI_str += f"{x}, ${y}\n--------------------------------------\n"     # Build the return item
+                capex_total += int(y) + capex_total
+            ROI_str += f"Your Total Capital Expense is : ${capex_total}\n"
+            ROI_str += '=============================\n'
+            ROI_str += '=============================\n'
+            ROI_str += f"Your total Return on Investment is {((income_total-expense_total)*12)/capex_total}%"
+            return ROI_str
 
+# ROI is (income - expenses) *12 /total investment
 holders = Container() # initialize a global variable that will hold my input objects
 
 def main():
@@ -107,24 +139,26 @@ def main():
             holders.append(name)  # adds inputs object to hodlers list
             print(f"Thank you, your account plan has been added to our system {name.name.title()}!!")
         if answer.lower() == 'e':
-            account = input(f"Which portfolio would you like to edit? {holders}") # create a display function
+            account = ''
             if holders.plans == None:
                 print("Our records show there is no plans on file")
+            while account not in holders.plans:
+                 account = input(f"Which portfolio would you like to edit? {holders}") # create a display function
             if account in holders.plans:
                 attempt = input(f"Please enter the password associated with {account}!  ")
                 if attempt == holders.plans[account].password:   # security check
-                    response = '' # help ensure response is in dict
+
                     while True:  # EDITING MENU
                         answer = input("Welcome to edit Menu, what woul you like to do? Review Plan 'r', Edit Income 'i', Edit Expense 'e', Edit payment 'p', Quit to main 'q'  ")
-                        if answer == 'r':
-                            name.display('4')  #********************MAKE THIS STILL IN THE DISPLAY FUNCTION
-                        if answer == 'i':
+                        if answer.lower() == 'r':
+                            print(name.display('4'))  #********************MAKE THIS STILL IN THE DISPLAY FUNCTION
+                        if answer.lower() == 'i':
                             name.edit('i')
-                        if answer == 'e':
+                        if answer.lower() == 'e':
                            name.edit('e')
-                        if answer == 'p':
+                        if answer.lower() == 'p':
                             name.edit('p')
-                        if answer == 'q':
+                        if answer.lower() == 'q':
                             break
                         else:
                             print('Invalid input recieved, please review main menu and try again!')   #You will use the def edit() function and this section will be really clean
@@ -136,34 +170,3 @@ def main():
 
 main()
 
-
-
-#JUST IN CASE
-
-                    # while True:  # EDITING MENU
-                    #     answer = input("Welcome to edit Menu, what woul you like to do? Review Plan 'r', Edit Income 'i', Edit Expense 'e', Edit payment 'p', Quit to main 'q'  ")
-                    #     if answer == 'r':
-                    #         pass
-                    #     if answer == 'i':
-                    #         while response.title() not in name.income:
-                    #             response = input(f'Which item would you like to adjust? ')
-                    #         new_value = input(f'What is the new value for {response.title()}?  ')
-                    #         name.income[response.title()] = new_value
-                    #         print(f'This is your new data set {name.display(1)}')
-                    #     if answer == 'e':
-                    #         while response.title() not in name.expenses:
-                    #             response = input(f'Which item would you like to adjust? ')
-                    #         new_value = input(f'What is the new value for {response.title()}?  ')
-                    #         name.expenses[response.title()] = new_value
-                    #         print(f'This is your new data set {name.display(1)}')
-                    #     if answer == 'p':
-                    #         while response.title() not in name.capex:
-                    #             response = input(f'Which item would you like to adjust? ')
-                    #         new_value = input(f'What is the new value for {response.title()}?  ')
-                    #         name.capex[response.title()] = new_value
-                    #         print(f'This is your new data set {name.display(2)}')
-                    #         pass
-                    #     if answer == 'q':
-                    #         break
-                    #     else:
-                    #         print('Invalid input recieved, please review main menu and try again!')   #You will use the def edit() function and this section will be really clean
